@@ -1,24 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
 import './App.css';
+import Camera from './Camera/Camera';
 
 function App() {
+  const [isOffline, setIsOffline] = useState<boolean>(false)
+  const offlineStatus = !navigator.onLine;
+  useEffect(() => {
+    window.addEventListener('online', () => {
+      setIsOffline(false);
+    })
+    window.addEventListener('offline', () => {
+      setIsOffline(true);
+    })
+  }, [])
+  useEffect(() => {
+    console.log(offlineStatus);
+    if (isOffline !== offlineStatus) {
+      setIsOffline(offlineStatus)
+    }
+  }, [offlineStatus, isOffline])
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Camera  isOffline={isOffline} />
     </div>
   );
 }
